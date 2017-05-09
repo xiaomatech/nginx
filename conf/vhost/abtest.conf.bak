@@ -1,0 +1,36 @@
+# location / 的 运行时信息缓存
+lua_shared_dict server_name_root_sysConfig 1m;
+# location / 的 info:upstream 缓存
+lua_shared_dict server_name_kv_root_upstream 100m;
+
+server {
+    listen 8030 backlog=16384;
+    server_name localhost;
+    root /data/www/;
+
+    include common/server_util.conf;
+
+    location / {
+        # 指定该接口的HOST，用于配置运行时信息（可任意取名，只要进入本loction，运行时信息以此值为key，为本location设置运行时信息时，也以此值为key，需要约定好）
+        set $hostkey $server_name;
+
+        # 指定sysConfig的名字，与 缓存名字 root_sysConfig 一样(可任意取名，不要与别的lua_shared_dict冲突即可，但要与之前声明的shared_dict名字一样:root_sysConfig)
+        set $sysConfig server_name_root_sysConfig;
+        # 指定kv_upstream 的名字 与 缓存名字 kv_root_upstream 一样
+        set $kv_upstream server_name_kv_root_upstream;
+
+        # 设置默认upstream（该upstrema必须存在于upstream.conf，并且应该考虑到大部分请求将分流至默认upstream）
+        set $backend 'stable';
+
+        rewrite_by_lua_file 'abtesting/diversion.lua';
+
+	#add_header abbucket $abbucket;
+
+	#add_header utdid $utdid;
+
+	fastcgi_index  index.php;
+        include  fastcgi.conf;
+
+        proxy_pass http://$backend;
+    }
+}

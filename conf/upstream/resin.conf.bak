@@ -1,0 +1,12 @@
+upstream resins {
+	ip_hash;
+	keepalive 64;
+
+	check interval=30000 fall=5 rise=2 timeout=1000 default_down=true type=tcp;
+	check_keepalive_requests 100;
+    check_http_send "HEAD / HTTP/1.1\r\nConnection: keep-alive\r\n\r\n";
+    check_http_expect_alive http_2xx http_3xx;
+
+	server 127.0.0.1:8080 max_fails=5 fail_timeout=30s;
+	server 127.0.0.1:8081 max_fails=5 fail_timeout=30s;
+}

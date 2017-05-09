@@ -1,0 +1,175 @@
+#!/bin/sh
+#
+# nginx - this script starts and stops the nginx daemon
+#
+# chkconfig:   - 85 15
+# description:  Nginx is an HTTP(S) server, HTTP(S) reverse \
+#               proxy and IMAP/POP3 proxy server
+
+# Source function library.
+# . /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "$NETWORKING" = "no" ] && exit 0
+
+nginx="/opt/nginx/sbin/nginx"
+
+sysconfig="/etc/sysconfig/$prog"
+
+[ -f $sysconfig ] && . $sysconfig
+
+
+start() {
+    [ -x $nginx ] || exit 5
+    [ -f $NGINX_CONF_FILE ] || exit 6
+    echo -n $"Starting $prog: "
+    $nginx -c $NGINX_CONF_FILE
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    #killproc -p $pidfile $prog
+    kill -QUIT `cat $pidfile`
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    configtest_q || return 6
+    stop
+    start
+}
+
+reload() {
+    configtest_q || return 6
+    echo -n $"Reloading $prog: "
+    #killproc -p $pidfile $prog -HUP
+    kill -HUP `cat $pidfile`
+    echo
+}
+
+configtest() {
+    $nginx -t -c $NGINX_CONF_FILE
+}
+
+configtest_q() {
+    $nginx -t -q -c $NGINX_CONF_FILE
+}
+
+rh_status() {
+    status $prog
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+# Upgrade the binary with no downtime.
+upgrade() {
+    local oldbin_pidfile="${pidfile}.oldbin"
+
+    configtest_q || return 6
+    echo -n $"Upgrading $prog: "
+    kill -USR2 `cat $pidfile`
+    #killproc -p $pidfile $prog -USR2
+    retval=$?
+    sleep 1
+    if [[ -f ${oldbin_pidfile} && -f ${pidfile} ]];  then
+        #killproc -p $oldbin_pidfile $prog -QUIT
+	kill -QUIT `cat $oldbin_pidfile`
+        success $"$prog online upgrade"
+        echo 
+        return 0
+    else
+        failure $"$prog online upgrade"
+        echo
+        return 1
+    fi
+}
+
+# Tell nginx to reopen logs
+reopen_logs() {
+    configtest_q || return 6
+    echo -n $"Reopening $prog logs: "
+    #killproc -p $pidfile $prog -USR1
+    kill -USR1 `cat $pidfile`
+    retval=$?
+    echo
+    return $retval
+}
+
+enviroment=(alpha beta stable)
+
+#instance=${2:-'stable'}
+#prog="nginx_$instance"
+#lockfile="/var/lock/subsys/nginx_$instance"
+#pidfile="/var/run/nginx_$instance.pid"
+#NGINX_CONF_FILE="/opt/nginx/conf/$instance.conf"
+
+
+prog="nginx"
+lockfile="/var/lock/subsys/nginx"
+pidfile="/var/run/nginx.pid"
+NGINX_CONF_FILE="/opt/nginx/conf/nginx.conf"
+
+
+do_action() {
+	if [[ $instance == 'all' ]];then
+		for item in ${enviroment[@]};
+		do 
+			prog="nginx_$item"
+		        lockfile="/var/lock/subsys/nginx_$item"
+        		pidfile="/var/run/nginx_$item.pid"
+        		NGINX_CONF_FILE="/opt/nginx/conf/$item.conf"
+			$1
+		done;
+	else
+		$1
+	fi
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+	#do_action $1 $instance
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+	#do_action $1 $instance
+        ;;
+    restart|configtest|reopen_logs)
+        $1
+	#do_action $1 $instance
+        ;;
+    force-reload|upgrade) 
+        rh_status_q || exit 7
+        #upgrade
+        ;;
+    reload)
+        rh_status_q || exit 7
+        $1
+	#do_action $1 $instance
+        ;;
+    status|status_q)
+        rh_$1
+	#do_action rh_$1 $instance
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 7
+        restart
+	    ;;
+    *)
+        echo $"Usage: $0 {start|stop|reload|configtest|status|force-reload|upgrade|restart|reopen_logs}"
+        exit 2
+esac

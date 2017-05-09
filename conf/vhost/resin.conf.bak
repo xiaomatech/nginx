@@ -1,0 +1,16 @@
+server {
+	listen 8081 backlog=16384 reuseport so_keepalive=60s;
+	#listen 443 ssl backlog=4096 reuseport http2;
+	server_name a.test.com;
+	#limit_req zone=zone_one burst=2000 nodelay;
+	
+	include common/server_util.conf;
+
+
+	location / {
+	    #resin
+	    #proxy_cache proxy_cache;
+	    proxy_pass http://resins;
+	}
+
+}

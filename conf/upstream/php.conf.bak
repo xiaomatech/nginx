@@ -1,0 +1,30 @@
+upstream stable {
+	ip_hash;
+	keepalive 64;
+
+	check interval=30000 fall=5 rise=2 timeout=1000 default_down=true;
+    check_keepalive_requests 10;
+
+	server unix:/dev/shm/php-fpm-stable.sock max_fails=5 fail_timeout=30s weight=9;
+	server unix:/dev/shm/php-fpm-beta.sock max_fails=5 fail_timeout=30s weight=1;
+	server unix:/dev/shm/php-fpm-alpha.sock max_fails=5 fail_timeout=30s weight=1;
+}
+
+upstream alpha {
+        keepalive 64;
+
+        check interval=30000 fall=5 rise=2 timeout=1000 default_down=true;
+        check_keepalive_requests 10;
+
+        server unix:/dev/shm/php-fpm-alpha.sock max_fails=5 fail_timeout=30s;
+}
+
+
+upstream beta {
+        keepalive 64;
+
+        check interval=30000 fall=5 rise=2 timeout=1000 default_down=true;
+        check_keepalive_requests 10;
+
+        server unix:/dev/shm/php-fpm-beta.sock max_fails=5 fail_timeout=30s;
+}

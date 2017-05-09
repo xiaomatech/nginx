@@ -1,0 +1,16 @@
+server {
+	listen 81 backlog=16384 reuseport so_keepalive=60s;
+	#listen 443 ssl backlog=4096 reuseport http2;
+	#limit_req zone=zone_one burst=2000 nodelay;
+	server_name b.test.com;	
+	include common/server_util.conf;
+
+	root /data/www/;
+	
+	location / {
+            #fastcgi_cache fastcgi_cache;
+	        fastcgi_keep_conn	on;
+            include  fastcgi.conf;
+            fastcgi_pass 127.0.0.1:8000;
+    }
+}

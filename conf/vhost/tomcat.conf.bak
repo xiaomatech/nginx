@@ -1,0 +1,13 @@
+server {
+	listen 8082 backlog=16384 reuseport so_keepalive=60s;
+	#listen 443 ssl backlog=4096 reuseport http2;
+	server_name c.test.com;
+	
+	include common/server_util.conf;
+
+	location / {
+	    #tomcat
+	    #proxy_cache proxy_cache;
+	    proxy_pass http://stable;
+	}
+}

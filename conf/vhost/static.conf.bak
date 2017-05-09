@@ -1,0 +1,10 @@
+server {
+	listen 80 backlog=16384 reuseport so_keepalive=60s;
+	#listen 443 ssl backlog=4096 reuseport http2;
+	#limit_req zone=zone_one burst=2000 nodelay;
+	
+	root /data/www/;
+
+	include common/server_util.conf;
+	include common/images.conf;
+}
