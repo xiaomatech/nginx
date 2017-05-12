@@ -22,7 +22,7 @@ server {
         # 设置默认upstream（该upstrema必须存在于upstream.conf，并且应该考虑到大部分请求将分流至默认upstream）
         set $backend 'stable';
 
-        rewrite_by_lua_file 'abtesting/diversion.lua';
+        rewrite_by_lua_file 'lib/resty/abtesting/diversion.lua';
 
 	#add_header abbucket $abbucket;
 
