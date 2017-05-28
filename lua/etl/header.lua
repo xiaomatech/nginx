@@ -2,6 +2,7 @@ local woothee = require "resty.woothee"
 local ipdatx = require "resty.ipdatx"
 local cjson = require "cjson"
 local cjson_safe = require "cjson.safe"
+local cjson_encode = cjson_safe.encode
 local cjson_decode = cjson_safe.decode
 local str_format = string.format
 local str_gmatch = string.gmatch
@@ -54,31 +55,3 @@ ngx.var.ipip_world_code     = ipip.data[12]
 
 local cookie = parse_cookie(ngx_var.http_cookie)
 local referer = parse_referer(ngx_var.http_referer)
-
-local query_dic = ngx.req.get_uri_args()
-ngx.req.read_body()
-local request_dic = ngx.req.get_post_args()
-
-local platform =  query_dic['platform'] or nil
-platform = platform or (request_dic['platform'] or nil)
-platform = platform or ''
-
-if 'android' ~= platform then
-    local event_time = request_dic['event_time'] or ''
-    event_time = str_gsub(event_time, "(%s+)", '+')
-    request_dic['event_time'] = event_time
-end
-
-for k, v in pairs(query_dic) do
-    if not request_dic[k] then
-        local query_key = 'get_k_' .. k
-        ngx.var.query_key= v
-    end
-end
-
-for k, v in pairs(request_dic) do
-    if not request_dic[k] then
-        local query_key = 'post_k_' .. k
-        ngx.var.query_key= v
-    end
-end
