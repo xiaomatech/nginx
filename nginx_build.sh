@@ -9,7 +9,6 @@ mkdir $build_dir && cd $build_dir
 wget http://nginx.org/download/nginx-$nginx_version.tar.gz && tar -zxvf nginx-$nginx_version.tar.gz
 wget https://github.com/zebrafishlabs/nginx-statsd/archive/master.zip -O nginx-statsd-master.zip && unzip nginx-statsd-master.zip
 wget https://github.com/vozlt/nginx-module-vts/archive/master.zip -O nginx-module-vts-master.zip && unzip nginx-module-vts-master.zip
-wget https://github.com/yaoweibin/ngx_http_substitutions_filter_module/archive/master.zip -O ngx_http_substitutions_filter_module.zip && unzip ngx_http_substitutions_filter_module.zip
 wget https://github.com/weibocom/nginx-upsync-module/archive/master.zip -O nginx-upsync-module-master.zip && unzip nginx-upsync-module-master.zip
 wget https://github.com/alibaba/nginx-http-concat/archive/master.zip -O nginx-http-concat-master.zip && unzip nginx-http-concat-master.zip
 wget https://github.com/alibaba/nginx-http-sysguard/archive/master.zip -O nginx-http-sysguard-master.zip && unzip nginx-http-sysguard-master.zip
@@ -35,14 +34,14 @@ patch -p0 < ./check.patch
 --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_auth_request_module \
 --with-http_random_index_module --with-http_secure_link_module --with-http_degradation_module --with-http_slice_module --with-http_stub_status_module \
 --with-http_v2_module --with-stream --with-stream_ssl_module --with-stream_realip_module --with-stream_geoip_module --with-stream_ssl_preread_module \
---add-module=$build_dir/nginx-module-vts-master --add-module=$build_dir/ngx_http_substitutions_filter_module-master --add-module=$build_dir/nginx-upsync-module-master \
+--add-module=$build_dir/nginx-module-vts-master --add-module=$build_dir/nginx-upsync-module-master \
 --add-module=$build_dir/ngx_cache_purge-master  --add-module=$build_dir/nginx-http-concat-master --add-module=$build_dir/nginx-http-trim-master --add-module=$build_dir/nginx-http-sysguard-master \
 --add-module=$build_dir/nginx-statsd-master --add-module=$build_dir/ngx_dynamic_upstream-master --add-module=$build_dir/ngx_devel_kit-master \
 --add-module=$build_dir/nginx_upstream_check_module-master --add-module=$build_dir/lua-nginx-module-master
 
 make && make install
 
-rm -rf $build_dir
+#rm -rf $build_dir
 
 cd ~
 #wget https://raw.githubusercontent.com/xiaomatech/nginx/master/nginx.init -O /etc/init.d/nginx

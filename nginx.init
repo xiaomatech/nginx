@@ -107,35 +107,12 @@ reopen_logs() {
     return $retval
 }
 
-enviroment=(alpha beta stable)
-
-#instance=${2:-'stable'}
-#prog="nginx_$instance"
-#lockfile="/var/lock/subsys/nginx_$instance"
-#pidfile="/var/run/nginx_$instance.pid"
-#NGINX_CONF_FILE="/opt/nginx/conf/$instance.conf"
-
 
 prog="nginx"
 lockfile="/var/lock/subsys/nginx"
 pidfile="/var/run/nginx.pid"
 NGINX_CONF_FILE="/opt/nginx/conf/nginx.conf"
 
-
-do_action() {
-	if [[ $instance == 'all' ]];then
-		for item in ${enviroment[@]};
-		do 
-			prog="nginx_$item"
-		        lockfile="/var/lock/subsys/nginx_$item"
-        		pidfile="/var/run/nginx_$item.pid"
-        		NGINX_CONF_FILE="/opt/nginx/conf/$item.conf"
-			$1
-		done;
-	else
-		$1
-	fi
-}
 
 case "$1" in
     start)
