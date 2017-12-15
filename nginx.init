@@ -118,16 +118,13 @@ case "$1" in
     start)
         rh_status_q && exit 0
         $1
-	#do_action $1 $instance
         ;;
     stop)
         rh_status_q || exit 0
         $1
-	#do_action $1 $instance
         ;;
     restart|configtest|reopen_logs)
         $1
-	#do_action $1 $instance
         ;;
     force-reload|upgrade) 
         rh_status_q || exit 7
@@ -136,11 +133,9 @@ case "$1" in
     reload)
         rh_status_q || exit 7
         $1
-	#do_action $1 $instance
         ;;
     status|status_q)
         rh_$1
-	#do_action rh_$1 $instance
         ;;
     condrestart|try-restart)
         rh_status_q || exit 7

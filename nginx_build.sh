@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
 build_dir="/tmp/soft"
-nginx_version="1.12.0"
+nginx_version="1.12.2"
 
 yum install -y gd-devel pcre-devel libwebp-devel openssl-devel readline-devel luajit-devel GeoIP-devel libxml2-devel libxslt-devel libwebp libxslt libxml2 readline gd GeoIP luajit openssl
 
 mkdir $build_dir && cd $build_dir
 wget http://nginx.org/download/nginx-$nginx_version.tar.gz && tar -zxvf nginx-$nginx_version.tar.gz
-wget https://github.com/zebrafishlabs/nginx-statsd/archive/master.zip -O nginx-statsd-master.zip && unzip nginx-statsd-master.zip
 wget https://github.com/vozlt/nginx-module-vts/archive/master.zip -O nginx-module-vts-master.zip && unzip nginx-module-vts-master.zip
 wget https://github.com/weibocom/nginx-upsync-module/archive/master.zip -O nginx-upsync-module-master.zip && unzip nginx-upsync-module-master.zip
 wget https://github.com/alibaba/nginx-http-concat/archive/master.zip -O nginx-http-concat-master.zip && unzip nginx-http-concat-master.zip
@@ -36,7 +35,7 @@ patch -p0 < ./check.patch
 --with-http_v2_module --with-stream --with-stream_ssl_module --with-stream_realip_module --with-stream_geoip_module --with-stream_ssl_preread_module \
 --add-module=$build_dir/nginx-module-vts-master --add-module=$build_dir/nginx-upsync-module-master \
 --add-module=$build_dir/ngx_cache_purge-master  --add-module=$build_dir/nginx-http-concat-master --add-module=$build_dir/nginx-http-trim-master --add-module=$build_dir/nginx-http-sysguard-master \
---add-module=$build_dir/nginx-statsd-master --add-module=$build_dir/ngx_dynamic_upstream-master --add-module=$build_dir/ngx_devel_kit-master \
+--add-module=$build_dir/ngx_dynamic_upstream-master --add-module=$build_dir/ngx_devel_kit-master \
 --add-module=$build_dir/nginx_upstream_check_module-master --add-module=$build_dir/lua-nginx-module-master
 
 make && make install

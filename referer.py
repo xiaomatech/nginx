@@ -3,10 +3,12 @@ import json
 
 try:
     from urlparse import urlparse, parse_qsl
+
     iteritems = lambda dikt: dikt.iteritems()
     text_type = unicode
 except ImportError:  # urlparse was renamed urllib.parse in Python 3
     from urllib.parse import urlparse, parse_qsl
+
     iteritems = lambda dikt: dikt.items()
     text_type = str
 
@@ -28,7 +30,8 @@ def load_referers(json_file):
                         referers_dict[domain]['params'] = params
     return referers_dict
 
-JSON_FILE = os.path.join(os.path.dirname(__file__), 'data', 'referers.json')
+
+JSON_FILE = os.path.join(os.path.dirname(__file__), 'referers.json')
 REFERERS = load_referers(JSON_FILE)
 
 
