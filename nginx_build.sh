@@ -11,7 +11,6 @@ wget https://github.com/vozlt/nginx-module-vts/archive/master.zip -O nginx-modul
 wget https://github.com/weibocom/nginx-upsync-module/archive/master.zip -O nginx-upsync-module-master.zip && unzip nginx-upsync-module-master.zip
 wget https://github.com/alibaba/nginx-http-concat/archive/master.zip -O nginx-http-concat-master.zip && unzip nginx-http-concat-master.zip
 wget https://github.com/alibaba/nginx-http-sysguard/archive/master.zip -O nginx-http-sysguard-master.zip && unzip nginx-http-sysguard-master.zip
-wget https://github.com/cubicdaiya/ngx_dynamic_upstream/archive/master.zip -O ngx_dynamic_upstream-master.zip && unzip ngx_dynamic_upstream-master.zip
 wget https://github.com/FRiCKLE/ngx_cache_purge/archive/master.zip -O ngx_cache_purge-master.zip && unzip ngx_cache_purge-master.zip
 wget https://github.com/xiaomatech/nginx-http-trim/archive/master.zip -O nginx-http-trim-master.zip && unzip nginx-http-trim-master.zip
 wget https://github.com/xiaokai-wang/nginx_upstream_check_module/archive/master.zip -O nginx_upstream_check_module-master.zip && unzip nginx_upstream_check_module-master.zip
@@ -35,8 +34,7 @@ patch -p0 < ./check.patch
 --with-http_v2_module --with-stream --with-stream_ssl_module --with-stream_realip_module --with-stream_geoip_module --with-stream_ssl_preread_module \
 --add-module=$build_dir/nginx-module-vts-master --add-module=$build_dir/nginx-upsync-module-master \
 --add-module=$build_dir/ngx_cache_purge-master  --add-module=$build_dir/nginx-http-concat-master --add-module=$build_dir/nginx-http-trim-master --add-module=$build_dir/nginx-http-sysguard-master \
---add-module=$build_dir/ngx_dynamic_upstream-master --add-module=$build_dir/ngx_devel_kit-master \
---add-module=$build_dir/nginx_upstream_check_module-master --add-module=$build_dir/lua-nginx-module-master
+--add-module=$build_dir/ngx_devel_kit-master --add-module=$build_dir/nginx_upstream_check_module-master --add-module=$build_dir/lua-nginx-module-master
 
 make && make install
 
