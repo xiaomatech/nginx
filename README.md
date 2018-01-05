@@ -2,8 +2,8 @@
 
 #使用
 ```
-  wget https://raw.githubusercontent.com/xiaomatech/nginx/master/nginx-1.12.0-1.x86_64.rpm
-  yum localinstall -y ./nginx-1.12.0-1.x86_64.rpm
+  wget https://raw.githubusercontent.com/xiaomatech/nginx/master/nginx-1.12.2.x86_64.rpm
+  yum localinstall -y ./nginx-1.12.2.x86_64.rpm
   yum install -y GeoIP GeoIP-data 
   #geoipupdate
   
