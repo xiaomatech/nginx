@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 build_dir="/tmp/soft"
-nginx_version="1.12.2"
+nginx_version="1.13.8"
 
 yum install -y gd-devel pcre-devel libwebp-devel openssl-devel readline-devel luajit-devel GeoIP-devel libxml2-devel libxslt-devel libwebp libxslt libxml2 readline gd GeoIP luajit openssl
 
